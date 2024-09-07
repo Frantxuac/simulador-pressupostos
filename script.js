@@ -50,7 +50,7 @@ function showScreen(screenId) {
 function updateProviders() {
     const serviceType = document.getElementById('serviceType').value;
     const providerSelect = document.getElementById('provider');
-    providerSelect.innerHTML = '<option value="" disabled selected>Seleccione el Proveedor</option>';
+    providerSelect.innerHTML = '<option value="" disabled selected>Seleccioni el Proveidor</option>';
 
     const filteredProviders = providers.filter(provider => provider.Category === serviceType);
 
@@ -240,7 +240,7 @@ function submitQuotation() {
 
 function resetForm() {
     document.getElementById('quotationForm').reset();
-    document.getElementById('provider').innerHTML = '<option value="" disabled selected>Seleccione el Proveedor</option>';
+    document.getElementById('provider').innerHTML = '<option value="" disabled selected>Seleccioni el Proveidor</option>';
     document.getElementById('productsContainer').innerHTML = '';
     selectedProducts = {}; // Resetear productos seleccionados
     M.FormSelect.init(document.getElementById('provider'));
@@ -571,4 +571,10 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('quotationsHistory');
     loadData();
     showScreen('home');
+
+    // Detectar dispositivos móviles y forzar la recarga
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        window.location.reload(true);  // Forzar la recarga completa de la página en móviles
+    }
+
 });
