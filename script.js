@@ -188,6 +188,7 @@ function submitQuotation() {
     totalCost = 0;
     let selectedProductsHtml = '';
     let adjustmentDetails = '';
+    let selectedProductsList = [];  // Para negotiationDetails
 
     for (const productName in selectedProducts) {
         const product = products.find(p => p.Provider === provider && p.Name === productName);
@@ -219,8 +220,18 @@ function submitQuotation() {
             totalCost += cost;
             selectedProductsHtml += `<p>${productName}: ${quantity} x €${adjustedPrice.toFixed(2)} (no inclou IVA) = €${cost.toFixed(2)}</p>`;
             adjustmentDetails += `<p>${productName}: Modificació del preu (${adjustment}) donat que ${reason}</p>`;
+            selectedProductsList.push({ name: productName, quantity: quantity });
         }
     }
+
+    // Guardar en negotiationDetails
+    negotiationDetails = {
+        requesterName: requesterName,
+        provider: provider,
+        products: selectedProductsList,
+        initialDeliveryDate: deliveryDate,
+        currentDeliveryDate: deliveryDate
+    };
 
     const resultsDiv = document.getElementById('quotationResults');
     resultsDiv.innerHTML = `
@@ -238,6 +249,7 @@ function submitQuotation() {
     showScreen('results');
 }
 
+
 function resetForm() {
     document.getElementById('quotationForm').reset();
     document.getElementById('provider').innerHTML = '<option value="" disabled selected>Seleccioni el Proveidor</option>';
@@ -249,21 +261,101 @@ function resetForm() {
 function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    const resultsDiv = document.getElementById('quotationResults');
-    const content = resultsDiv.innerHTML;
 
-    // Dividir el contenido en líneas individuales
-    const lines = content.replace(/<\/?[^>]+(>|$)/g, "").split('\n');
+    // Título
+    doc.setFontSize(18);
+    doc.text('Resum de la Cotització', 10, 10);
 
-    // Añadir cada línea al PDF
-    let y = 20; // Coordenada Y inicial
-    lines.forEach(line => {
-        doc.text(line.trim(), 10, y);
-        y += 10; // Incrementar la coordenada Y para la siguiente línea
+    // Organizar los datos del cliente y proveedor en dos columnas específicas
+    doc.setFontSize(12);
+    const leftColumn = 10;
+    const rightColumn = 110;
+
+    // Cliente (columna izquierda)
+    doc.text('Dades del Client', leftColumn, 20);
+    doc.text(`Client: ${negotiationDetails.requesterName || "No especificado"}`, leftColumn, 30);
+
+    // Proveedor (columna derecha con tipo de servicio)
+    const serviceType = document.getElementById('serviceType').value;
+    doc.text('Dades del Proveïdor', rightColumn, 20);
+    doc.text(`Proveïdor: ${negotiationDetails.provider || "No especificado"} (${serviceType})`, rightColumn, 30);
+
+    // Crear tabla con productos
+    const tableData = negotiationDetails.products.map(product => {
+        const productPrice = products.find(p => p.Name === product.name).Price; // Precio unitario
+        const totalProductPrice = product.quantity * productPrice; // Precio total por producto
+        return [
+            product.name,
+            product.quantity,
+            `€${productPrice.toFixed(2)}`,
+            `€${totalProductPrice.toFixed(2)}`
+        ];
     });
 
+    // Calcular el IVA y el total con IVA
+    const iva = totalCost * 0.21;
+    const totalWithIva = totalCost + iva;
+
+    // Añadir una fila de totales al final de la tabla
+    tableData.push(['', '', 'Total (sense IVA)', `€${totalCost.toFixed(2)}`]);
+    tableData.push(['', '', 'IVA (21%)', `€${iva.toFixed(2)}`]);
+    tableData.push(['', '', 'Total (amb IVA)', `€${totalWithIva.toFixed(2)}`]);
+
+    // Agregar tabla con productos al PDF
+    doc.autoTable({
+        head: [['Producto', 'Cantidad', 'Preu Unitari', 'Preu Total']],
+        body: tableData,
+        startY: 50, // Iniciar la tabla después de los datos de cliente y proveedor
+        styles: {
+            fontSize: 12
+        },
+        didParseCell: (data) => {
+            const rowIndex = data.row.index;
+            const isTotalRow = rowIndex >= tableData.length - 3; // Últimas 3 filas son los totales
+            if (isTotalRow) {
+                data.cell.styles.fontStyle = 'bold'; // Negrita
+                data.cell.styles.fillColor = [240, 240, 240]; // Fondo gris claro
+            }
+        }
+    });
+
+    // Añadir frase con las fechas de entrega debajo de la tabla de productos
+    let finalY = doc.lastAutoTable.finalY + 10; // Posición final después de la tabla
+    doc.text(`La data acordada d'entrega és: ${negotiationDetails.currentDeliveryDate}.`, 10, finalY);
+    doc.text(`La petició inicial del client era: ${negotiationDetails.initialDeliveryDate}.`, 10, finalY + 10);
+
+    // Resumen de negociación (si la hubo)
+    if (negotiationAttempts > 0) {
+        finalY += 20; // Añadir espacio para la tabla de negociación
+        const negotiationData = [
+            ['Nombre de negociacions', negotiationAttempts],
+            ['Preu Inicial', `€${initialOffer.toFixed(2)}`],
+            ['Preu Final', finalOffer > 0 ? `€${finalOffer.toFixed(2)}` : "NO S'HA ARRIBAT A CAP ACORD"]
+        ];
+
+        doc.autoTable({
+            head: [['Detall de la Negociació', 'Valor']],
+            body: negotiationData,
+            startY: finalY, // Iniciar la tabla después de la frase de las fechas
+            styles: {
+                fontSize: 12
+            },
+            didParseCell: (data) => {
+                data.cell.styles.fontStyle = 'bold'; // Aplicar negrita a la celda de la cabecera
+            }
+        });
+    }
+
+    // Añadir pie de página
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(10);
+    doc.text('Aquest és un pressupost fictici creat pel Simulador de Pressupostos del Politècnics', 10, pageHeight - 10);
+
+    // Descargar el PDF
     doc.save('cotizacion.pdf');
 }
+
+
 
 function saveQuotation(requesterName, serviceType, provider, selectedProductsHtml, deliveryDate, totalCost, adjustmentDetails) {
     const quotation = {
@@ -510,7 +602,7 @@ function sendMessage() {
     const chatInput = document.getElementById('chatInput');
     const message = chatInput.value.trim();
     if (message) {
-        addMessageToChat('Alumno', message);
+        addMessageToChat('Client', message);
         chatInput.value = '';
         simulateProviderResponse();
     }
