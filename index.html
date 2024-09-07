@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Cotizaciones</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div id="app" class="container">
+        <!-- Menú hamburguesa flotante -->
+        <div class="hamburger-menu">
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+
+        <ul class="sidenav" id="mobile-demo">
+            <li><a href="#" onclick="showScreen('home')">Inici</a></li>
+            <li><a href="#" onclick="showScreen('request')">Sol·licitar Pressupost</a></li>
+            <li><a href="#" onclick="showScreen('history')">Històric de Pressupostos</a></li>
+            <li><a href="#" onclick="showScreen('providers')">Empreses Proveïdores</a></li>
+        </ul>
+
+        <!-- Pantalla de Inicio -->
+        <div id="home" class="screen active">
+            <h1 class="center-align title">Simulador de Pressupostos</h1>
+            <div class="row center-align">
+                <div class="col s12 m4">
+                    <button class="btn waves-effect waves-light" onclick="showScreen('request')">Sol·licitar Pressupostos</button>
+                </div>
+                <div class="col s12 m4">
+                    <button class="btn waves-effect waves-light" onclick="showScreen('history')">Històric Pressupostos</button>
+                </div>
+                <div class="col s12 m4">
+                    <button class="btn waves-effect waves-light" onclick="showScreen('providers')">Consultar Proveïdors</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pantalla de Solicitud de Cotización -->
+        <div id="request" class="screen">
+            <h1 class="center-align title">Sol·licitar Pressupost</h1>
+            <form id="quotationForm">
+                <div class="input-field">
+                    <input type="text" id="requesterName" name="requesterName" required>
+                    <label for="requesterName">Nom de l'Equipo/Persona</label>
+                </div>
+                
+                <div class="input-field">
+                    <select id="serviceType" name="serviceType" onchange="updateProviders()" required>
+                        <option value="" disabled selected>Escull un tipus de servei</option>
+                        <option value="Neteja">Neteja</option>
+                        <option value="Càtering">Càtering</option>
+                        <option value="Transporte">Transport</option>
+                        <option value="Alquiler de equipos">Lloguer d'equipos</option>
+                        <option value="Seguridad">Seguretat</option>
+                        <option value="Marketing y Publicidad">Màrqueting i Publicitat</option>
+                        <option value="Diseño Gráfico">Disseny Gràfic</option>
+                        <option value="Consultoría">Consultoria</option>
+                        <option value="Mobiliario">Mobiliari</option>
+                    </select>
+                    <label for="serviceType">Tipus de servei</label>
+                </div>
+
+                <div class="input-field">
+                    <select id="provider" name="provider" onchange="updateProducts()" required>
+                        <!-- Opciones de proveedores serán añadidas dinámicamente -->
+                    </select>
+                    <label for="provider">Proveïdor</label>
+                </div>
+
+                <div id="productsContainer">
+                    <!-- Productos serán añadidos dinámicamente -->
+                </div>
+
+                <div class="input-field">
+                    <input type="text" id="deliveryDate" name="deliveryDate" class="datepicker" required>
+                    <label for="deliveryDate">Data d'entrega desitjada</label>
+                </div>
+                
+                <div class="row center-align">
+                    <div class="col s12 m6">
+                        <button class="btn waves-effect waves-light" type="button" onclick="submitQuotation()">Demanar Pressupost</button>
+                    </div>
+                    <div class="col s12 m6">
+                        <button class="btn waves-effect waves-light red" type="button" onclick="resetForm()">Netejar Formulari</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Pantalla de Resultats -->
+        <div id="results" class="screen">
+            <h1 class="center-align title">Resultats de la Cotització</h1>
+            <div id="quotationResults" class="section"></div>
+            <div class="row center-align">
+                <div class="col s12 m3">
+                    <button class="btn waves-effect waves-light" onclick="generatePDF()">Descarregar en PDF</button>
+                </div>
+                <div class="col s12 m3">
+                    <button class="btn waves-effect waves-light" onclick="startNegotiation()">Iniciar la Negociació</button>
+                </div>
+                <div class="col s12 m3">
+                    <button class="btn waves-effect waves-light" onclick="startChat()">Iniciar Chat</button>
+                </div>
+                <div class="col s12 m3">
+                    <button class="btn waves-effect waves-light" onclick="showScreen('home')">Tornar a l'Inici</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de Negociació -->
+        <div id="negotiation" class="screen">
+            <h1 class="center-align title">Negociació</h1>
+            <div id="negotiationDetails" class="section"></div>
+            <div class="input-field">
+                <input type="number" id="counterOffer" name="counterOffer" min="0" required>
+                <label for="counterOffer">Oferta de l'Alumne (€)</label>
+            </div>
+            <div class="row center-align">
+                <div class="col s12 m4">
+                    <button class="btn waves-effect waves-light" type="button" onclick="submitCounterOffer()">Enviar Contraoferta</button>
+                </div>
+                <div class="col s12 m4">
+                    <button class="btn waves-effect waves-light" type="button" onclick="acceptOffer()">Acceptar Oferta</button>
+                </div>
+                <div class="col s12 m4">
+                    <button class="btn waves-effect waves-light" type="button" onclick="cancelNegotiation()">Cancel·lar Negociació</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pantalla de Històric de Pressupostos -->
+        <div id="history" class="screen">
+            <h1 class="center-align title">Històric de Pressupostos</h1>
+            <div id="historyList" class="section"></div>
+            <div class="row center-align">
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light" onclick="showScreen('home')">Tornar a l'Inici</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de Proveïdors -->
+        <div id="providers" class="screen">
+            <h1 class="center-align title">Empreses Proveïdores</h1>
+            <div id="providersGrid" class="providers-grid"></div>
+            <div class="row center-align">
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light" onclick="showScreen('home')">Tornar a l'Inici</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de Chat -->
+        <div id="chat" class="screen">
+            <h1 class="center-align title">Chat amb el Proveïdor</h1>
+            <div id="chatMessages" class="section"></div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" id="chatInput" placeholder="Escriu el teu missatge...">
+                    <button class="btn waves-effect waves-light" onclick="sendMessage()">Enviar</button>
+                </div>
+            </div>
+            <div class="row center-align">
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light" onclick="showScreen('results')">Tornar als Resultats</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
