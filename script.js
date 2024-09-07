@@ -566,4 +566,9 @@ document.addEventListener('DOMContentLoaded', () => {
         dateFormat: "Y-m-d",
         allowInput: true
     });
+
+    // Vacía el historial de presupuestos cada vez que se carga la página
+    localStorage.removeItem('quotationsHistory');
+    loadData();
+    showScreen('home');
 });
