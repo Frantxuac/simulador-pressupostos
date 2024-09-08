@@ -24,7 +24,7 @@
     {
       "Provider": "FiestaCàtering",
       "Category": "Càtering",
-      "Logo": "logos/logo_FiestaCàtering.jpg",
+      "Logo": "logos/logo_FiestaCatering.jpg",
       "Description": "FiestaCatering destaca per la seva flexibilitat i creativitat en l'oferta de càtering per a tot tipus d'esdeveniments. Tant si es tracta d'una festa privada com d'una celebració d'empresa, el nostre equip treballa per oferir menús saborosos i accessibles que s'adapten a les necessitats de qualsevol celebració. La nostra prioritat és garantir que tots els convidats gaudeixin d'una experiència gastronòmica inoblidable.",
       "behavior": "flexible"
     },
@@ -66,7 +66,7 @@
     {
       "Provider": "SafeGuard",
       "Category": "Seguretat",
-      "Logo": "logos/Logo_SafeGuard.jpg",
+      "Logo": "logos/logo_SafeGuard.jpg",
       "Description": "SafeGuard és un proveïdor de serveis de seguretat especialitzat en la protecció d'esdeveniments i espais amb alta afluència de persones. Ofereixen solucions professionals de seguretat, com personal de seguretat, videovigilància i sistemes d'alarmes, garantint un servei fiable i eficient en tot moment.",
       "behavior": "flexible"
     },
