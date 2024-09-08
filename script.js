@@ -14,7 +14,7 @@ function loadData() {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            providers = data.providersInfo;
+            providers = data.providers;
             products = data.products;
             console.log("Data loaded successfully:", data);
             updateServiceTypes();
@@ -309,7 +309,7 @@ function generatePDF() {
         adjustmentRow = ['Penalització per entrega ràpida', '', '', formatCurrency(totalCost * 0.35)]; // Mostrar el valor de la penalización
         tableData.push(adjustmentRow);
     } else if (deliveryDaysDiff > 28) {
-        adjustmentRow = ['Descompte per entrega lejana', '', '', formatCurrency(totalCost * -0.20)]; // Mostrar el valor del descuento
+        adjustmentRow = ['Descompte per entrega relax', '', '', formatCurrency(totalCost * -0.20)]; // Mostrar el valor del descuento
         tableData.push(adjustmentRow);
     }
 
