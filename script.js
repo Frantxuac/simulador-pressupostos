@@ -6,6 +6,9 @@ let history = [];
 let totalCost = 0;
 let selectedProducts = {}; // Objeto para almacenar productos seleccionados y sus cantidades
 let chatHistory = [];
+let lastOfferTime = Date.now();  // Guardamos el momento en que se envió la última oferta
+let fastResponseTime = 20000;  // 1/3 minuto en milisegundos
+let slowResponseTime = 60000; // 1 minuto en milisegundos
 
 function loadData() {
     fetch('data.json')
@@ -262,48 +265,66 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
+    // Generar código aleatorio de 4 letras y 4 cifras
+    const code = generateRandomCode();
+
     // Título
     doc.setFontSize(18);
     doc.text('Resum de la Cotització', 10, 10);
 
-    // Organizar los datos del cliente y proveedor en dos columnas específicas
+    // Código de presupuesto
     doc.setFontSize(12);
+    doc.text(`Codi de pressupost: ${code}`, 10, 20);
+
+    // Organizar los datos del cliente y proveedor en dos columnas específicas
     const leftColumn = 10;
     const rightColumn = 110;
 
     // Cliente (columna izquierda)
-    doc.text('Dades del Client', leftColumn, 20);
-    doc.text(`Client: ${negotiationDetails.requesterName || "No especificado"}`, leftColumn, 30);
+    doc.text('Dades del Client', leftColumn, 30);
+    doc.text(negotiationDetails.requesterName || "No especificado", leftColumn, 40);
 
     // Proveedor (columna derecha con tipo de servicio)
     const serviceType = document.getElementById('serviceType').value;
-    doc.text('Dades del Proveïdor', rightColumn, 20);
-    doc.text(`Proveïdor: ${negotiationDetails.provider || "No especificado"} (${serviceType})`, rightColumn, 30);
+    doc.text('Dades del Proveïdor', rightColumn, 30);
+    doc.text(`${negotiationDetails.provider || "No especificado"} (${serviceType})`, rightColumn, 40);
 
     // Crear tabla con productos
     const tableData = negotiationDetails.products.map(product => {
         const productPrice = products.find(p => p.Name === product.name).Price; // Precio unitario
         const totalProductPrice = product.quantity * productPrice; // Precio total por producto
+
         return [
             product.name,
             product.quantity,
-            `€${productPrice.toFixed(2)}`,
-            `€${totalProductPrice.toFixed(2)}`
+            formatCurrency(productPrice),  // Formatear el precio unitario
+            formatCurrency(totalProductPrice) // Formatear el precio total
         ];
     });
+
+    // Verificar si hay descuento o penalización y solo mostrar la información sin recalcular el total
+    const deliveryDaysDiff = calculateDaysDifference(new Date(), new Date(negotiationDetails.currentDeliveryDate));
+    let adjustmentRow = [];
+    if (deliveryDaysDiff <= 3) {
+        adjustmentRow = ['Penalització per entrega ràpida', '', '', formatCurrency(totalCost * 0.35)]; // Mostrar el valor de la penalización
+        tableData.push(adjustmentRow);
+    } else if (deliveryDaysDiff > 28) {
+        adjustmentRow = ['Descompte per entrega lejana', '', '', formatCurrency(totalCost * -0.20)]; // Mostrar el valor del descuento
+        tableData.push(adjustmentRow);
+    }
 
     // Calcular el IVA y el total con IVA
     const iva = totalCost * 0.21;
     const totalWithIva = totalCost + iva;
 
     // Añadir una fila de totales al final de la tabla
-    tableData.push(['', '', 'Total (sense IVA)', `€${totalCost.toFixed(2)}`]);
-    tableData.push(['', '', 'IVA (21%)', `€${iva.toFixed(2)}`]);
-    tableData.push(['', '', 'Total (amb IVA)', `€${totalWithIva.toFixed(2)}`]);
+    tableData.push(['', '', 'Total (sense IVA)', formatCurrency(totalCost)]);
+    tableData.push(['', '', 'IVA (21%)', formatCurrency(iva)]);
+    tableData.push(['', '', 'Total (amb IVA)', formatCurrency(totalWithIva)]);
 
     // Agregar tabla con productos al PDF
     doc.autoTable({
-        head: [['Producto', 'Cantidad', 'Preu Unitari', 'Preu Total']],
+        head: [['Producte', 'Quantitat', 'Preu Unitari', 'Preu Total']],
         body: tableData,
         startY: 50, // Iniciar la tabla después de los datos de cliente y proveedor
         styles: {
@@ -327,10 +348,14 @@ function generatePDF() {
     // Resumen de negociación (si la hubo)
     if (negotiationAttempts > 0) {
         finalY += 20; // Añadir espacio para la tabla de negociación
+        const ivaNegotiation = finalOffer * 0.21;
+        const finalWithIvaNegotiation = finalOffer + ivaNegotiation;
         const negotiationData = [
             ['Nombre de negociacions', negotiationAttempts],
-            ['Preu Inicial', `€${initialOffer.toFixed(2)}`],
-            ['Preu Final', finalOffer > 0 ? `€${finalOffer.toFixed(2)}` : "NO S'HA ARRIBAT A CAP ACORD"]
+            ['Preu Inicial', formatCurrency(initialOffer)],
+            ['Preu Final', formatCurrency(finalOffer)],
+            ['IVA (21%)', formatCurrency(ivaNegotiation)],
+            ['Preu Final amb IVA', formatCurrency(finalWithIvaNegotiation)]
         ];
 
         doc.autoTable({
@@ -351,11 +376,43 @@ function generatePDF() {
     doc.setFontSize(10);
     doc.text('Aquest és un pressupost fictici creat pel Simulador de Pressupostos del Politècnics', 10, pageHeight - 10);
 
-    // Descargar el PDF
-    doc.save('cotizacion.pdf');
+    // Descargar el PDF con el nombre personalizado
+    const fileName = `Cotitzacio-${negotiationDetails.provider}-${code}.pdf`;
+    doc.save(fileName);
 }
 
 
+
+function calculateDaysDifference(startDate, endDate) {
+    const timeDiff = endDate - startDate;
+    return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+}
+
+
+// Función para generar un código aleatorio de 4 letras y 4 cifras
+function generateRandomCode() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
+    
+    let code = '';
+    
+    // Generar 4 letras aleatorias
+    for (let i = 0; i < 4; i++) {
+        code += letters.charAt(Math.floor(Math.random() * letters.length));
+    }
+    
+    // Generar 4 números aleatorios
+    for (let i = 0; i < 4; i++) {
+        code += numbers.charAt(Math.floor(Math.random() * numbers.length));
+    }
+    
+    return code;
+}
+
+// Función para formatear las cantidades económicas (número seguido de €)
+function formatCurrency(amount) {
+    return `${amount.toLocaleString('ca-ES')} €`;  // Añadir espacio antes del símbolo €
+}
 
 function saveQuotation(requesterName, serviceType, provider, selectedProductsHtml, deliveryDate, totalCost, adjustmentDetails) {
     const quotation = {
@@ -519,43 +576,56 @@ function updateNegotiationDetails() {
 
 function submitCounterOffer() {
     const counterOffer = parseFloat(document.getElementById('counterOffer').value);
-    if (isNaN(counterOffer) || counterOffer <= 0) {
-        alert('Introdueix una oferta vàlida.');
-        return;
+    const providerName = negotiationDetails.provider;
+    const providerBehavior = providers.find(p => p.Provider === providerName).behavior;  // Obtener comportamiento
+
+    let acceptanceThreshold; // Diferencia aceptable en %
+    
+    // Definir el comportamiento basado en el perfil del proveedor
+    switch (providerBehavior) {
+        case 'flexible':
+            acceptanceThreshold = 0.10; // Acepta contraofertas con diferencia de hasta 10%
+            break;
+        case 'rígid':
+            acceptanceThreshold = 0.02; // Solo acepta contraofertas cercanas, 2% de diferencia
+            break;
+        case 'agressiu':
+            acceptanceThreshold = 0.20; // Puede negociar más, hasta 20% de diferencia
+            break;
+        default:
+            acceptanceThreshold = 0.05; // Valor por defecto
     }
 
     const difference = Math.abs(currentOffer - counterOffer);
 
-    if (difference <= currentOffer * 0.05) {
-        // Aceptar la contraoferta si la diferencia es menor o igual al 5%
+    // Incrementar el número de negociaciones, incluso en el primer intento
+    negotiationAttempts++;
+
+    if (difference <= currentOffer * acceptanceThreshold) {
+        // Aceptar la contraoferta si la diferencia está dentro del umbral
         currentOffer = counterOffer;
         finalOffer = currentOffer;
         alert('El proveïdor ha acceptat la teva oferta.');
         endNegotiation();
-        return;
-    } else if (difference <= currentOffer * 0.2) {
-        // Hacer una nueva oferta si la diferencia es menor o igual al 20%
-        currentOffer = (currentOffer + counterOffer) / 2;
-        negotiationAttempts++;
-
-        // Retrasar la fecha de entrega entre 1 y 4 días
-        let deliveryDate = new Date(negotiationDetails.currentDeliveryDate);
-        deliveryDate.setDate(deliveryDate.getDate() + Math.floor(Math.random() * 4) + 1);
-        negotiationDetails.currentDeliveryDate = deliveryDate.toISOString().split('T')[0];
     } else {
-        // Rechazar la contraoferta si la diferencia es mayor al 20%
+        // Rechazar la oferta si está fuera del rango aceptable
         alert('El proveïdor ha rebutjat la teva oferta.');
-        negotiationAttempts++;
-    }
-
-    if (negotiationAttempts >= maxNegotiations) {
-        alert('El proveïdor ha arribat al màxim de negociacions.');
-        finalOffer = 0; // Indicar que no se ha llegado a un acuerdo
-        endNegotiation();
-    } else {
-        updateNegotiationDetails();
+        if (negotiationAttempts >= maxNegotiations) {
+            alert('El proveïdor ha arribat al màxim de negociacions.');
+            endNegotiation();
+        }
     }
 }
+
+
+
+// Añadir un evento para que la tecla ENTER también envíe la oferta
+document.getElementById('counterOffer').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        submitCounterOffer();  // Ejecutar la función cuando se presiona ENTER
+    }
+});
+
 
 function acceptOffer() {
     finalOffer = currentOffer;
@@ -565,27 +635,43 @@ function acceptOffer() {
 
 function endNegotiation() {
     const resultsDiv = document.getElementById('quotationResults');
+    
     let productsDetails = '';
     negotiationDetails.products.forEach(product => {
-        productsDetails += `<p><strong>Producte:</strong> ${product.name} - <strong>Quantitat:</strong> ${product.quantity}</p>`;
+        const productData = products.find(p => p.Name === product.name);
+        const productPrice = productData.Price; // Precio unitario original
+        const totalProductPrice = product.quantity * productPrice; // Precio total sin bonificaciones o penalizaciones
+        productsDetails += `
+            <p><strong>Producte:</strong> ${product.name} - 
+            <strong>Quantitat:</strong> ${product.quantity} - 
+            <strong>Preu Unitari:</strong> ${formatCurrency(productPrice)} - 
+            <strong>Preu Total:</strong> ${formatCurrency(totalProductPrice)}</p>`;
     });
 
-    let finalOfferText = finalOffer > 0 ? `€${finalOffer.toFixed(2)}` : "NO S'HA ARRIBAT A CAP ACORD";
+    let adjustmentText = '';
+    if (finalOffer < initialOffer) {
+        adjustmentText = 'Bonificació aplicada per resposta ràpida.';
+    } else if (finalOffer > initialOffer) {
+        adjustmentText = 'Penalització aplicada per resposta lenta.';
+    }
+
+    let finalOfferText = finalOffer > 0 ? formatCurrency(finalOffer) : "NO S'HA ARRIBAT A CAP ACORD";
 
     resultsDiv.innerHTML = `
         <p><strong>Client:</strong> ${negotiationDetails.requesterName}</p>
         <p><strong>Proveïdor:</strong> ${negotiationDetails.provider}</p>
-        <p><strong>Data d'entrega inicial:</strong> ${negotiationDetails.initialDeliveryDate}</p>
-        <p><strong>Nova data d'entrega:</strong> ${negotiationDetails.currentDeliveryDate}</p>
         ${productsDetails}
-        <p><strong>Oferta Inicial del Proveïdor:</strong> €${initialOffer.toFixed(2)}</p>
+        <p><strong>Preu Inicial del Proveïdor:</strong> ${formatCurrency(initialOffer)}</p>
         <p><strong>Oferta Final Acceptada:</strong> ${finalOfferText}</p>
+        <p><strong>Detalls de l'Oferta:</strong> ${adjustmentText}</p>
         <h4>Detalls de les Negociacions:</h4>
         <p>Nombre de Negociacions: ${negotiationAttempts}</p>
         <p>Preu Final: ${finalOfferText}</p>
     `;
+
     showScreen('results');
 }
+
 
 function cancelNegotiation() {
     alert('Has cancel·lat la negociació.');
@@ -653,11 +739,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidenav = document.querySelectorAll('.sidenav');
     M.Sidenav.init(sidenav);
 
-    // Inicializar Flatpickr
-    flatpickr("#deliveryDate", {
-        dateFormat: "Y-m-d",
-        allowInput: true
-    });
+   // Inicializar Flatpickr con las mejoras solicitadas
+flatpickr("#deliveryDate", {
+    dateFormat: "d-m-Y", // Formato de fecha: Año-Mes-Día
+    allowInput: true,
+    locale: {
+        firstDayOfWeek: 1, // Empezar la semana el lunes
+        weekdays: {
+            shorthand: ['Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds', 'Dg'],
+            longhand: ['Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte', 'Diumenge']
+        },
+        months: {
+            shorthand: ['Gen', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'],
+            longhand: ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre']
+        }
+    },
+    monthSelectorType: "static" // Mostrar el mes y el año en el encabezado
+});
+
 
     // Vacía el historial de presupuestos cada vez que se carga la página
     localStorage.removeItem('quotationsHistory');

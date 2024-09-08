@@ -4,115 +4,134 @@
       "Provider": "CleanMaster",
       "Category": "Neteja",
       "Logo": "logos/Logo_CleanMaster.webp",
-      "Description": "Servicios de limpieza para oficinas y hogares con productos ecológicos."
+      "Description": "Servicios de limpieza para oficinas y hogares con productos ecológicos.",
+      "behavior": "flexible"
     },
     {
       "Provider": "SparkleClean",
       "Category": "Neteja",
       "Logo": "logos/Logo_SparkleClean.webp",
-      "Description": "Limpieza profesional para espacios comerciales y residenciales."
+      "Description": "Limpieza profesional para espacios comerciales y residenciales.",
+      "behavior": "agressiu"
     },
     {
       "Provider": "GourmetDelights",
       "Category": "Càtering",
       "Logo": "logos/Logo_GourmetDelights.webp",
-      "Description": "Catering gourmet para eventos corporativos y privados."
+      "Description": "Catering gourmet para eventos corporativos y privados.",
+      "behavior": "rígid"
     },
     {
       "Provider": "FiestaCatering",
       "Category": "Càtering",
       "Logo": "logos/Logo_FiestaCatering.webp",
-      "Description": "Servicios de catering para fiestas y eventos familiares."
+      "Description": "Servicios de catering para fiestas y eventos familiares.",
+      "behavior": "flexible"
     },
     {
       "Provider": "ExpressTrans",
       "Category": "Transport",
       "Logo": "logos/Logo_ExpressTrans.webp",
-      "Description": "Soluciones de transporte rápido y seguro."
+      "Description": "Soluciones de transporte rápido y seguro.",
+      "behavior": "flexible"
     },
     {
       "Provider": "SafeMove",
       "Category": "Transport",
       "Logo": "logos/Logo_SafeMove.webp",
-      "Description": "Servicios de mudanza y transporte especializado."
+      "Description": "Servicios de mudanza y transporte especializado.",
+      "behavior": "rígid"
     },
     {
       "Provider": "EquipRent",
       "Category": "Lloguer d'equips",
       "Logo": "logos/Logo_EquipRent.webp",
-      "Description": "Alquiler de equipos para eventos y proyectos."
+      "Description": "Alquiler de equipos para eventos y proyectos.",
+      "behavior": "flexible"
     },
     {
       "Provider": "RentTech",
       "Category": "Lloguer d'equips",
       "Logo": "logos/Logo_RentTech.webp",
-      "Description": "Alquiler de tecnología y equipos audiovisuales."
+      "Description": "Alquiler de tecnología y equipos audiovisuales.",
+      "behavior": "agressiu"
     },
     {
       "Provider": "SafeGuard",
       "Category": "Seguretat",
       "Logo": "logos/Logo_SafeGuard.webp",
-      "Description": "Servicios de seguridad y vigilancia para eventos y negocios."
+      "Description": "Servicios de seguridad y vigilancia para eventos y negocios.",
+      "behavior": "flexible"
     },
     {
       "Provider": "SecureNow",
       "Category": "Seguretat",
       "Logo": "logos/Logo_SecureNow.webp",
-      "Description": "Soluciones integrales de seguridad para todas sus necesidades."
+      "Description": "Soluciones integrales de seguridad para todas sus necesidades.",
+      "behavior": "rígid"
     },
     {
       "Provider": "PromoExperts",
       "Category": "Màrqueting i Publicitat",
       "Logo": "logos/Logo_PromoExperts.webp",
-      "Description": "Agencia de marketing digital y publicidad."
+      "Description": "Agencia de marketing digital y publicidad.",
+      "behavior": "flexible"
     },
     {
       "Provider": "AdVision",
       "Category": "Màrqueting i Publicitat",
       "Logo": "logos/Logo_AdVision.webp",
-      "Description": "Soluciones creativas en marketing y publicidad."
+      "Description": "Soluciones creativas en marketing y publicidad.",
+      "behavior": "agressiu"
     },
     {
       "Provider": "CreativeDesigns",
       "Category": "Disseny Gràfic",
       "Logo": "logos/Logo_CreativeDesigns.webp",
-      "Description": "Diseño gráfico profesional para empresas y particulares."
+      "Description": "Diseño gráfico profesional para empresas y particulares.",
+      "behavior": "rígid"
     },
     {
       "Provider": "GraphixWorld",
       "Category": "Disseny Gràfic",
       "Logo": "logos/Logo_GraphixWorld.webp",
-      "Description": "Servicios de diseño gráfico y branding."
+      "Description": "Servicios de diseño gráfico y branding.",
+      "behavior": "flexible"
     },
     {
       "Provider": "ConsultPro",
       "Category": "Consultoria",
       "Logo": "logos/Logo_ConsultPro.webp",
-      "Description": "Servicios de consultoría empresarial y estratégica."
+      "Description": "Servicios de consultoría empresarial y estratégica.",
+      "behavior": "rígid"
     },
     {
       "Provider": "BizConsult",
       "Category": "Consultoria",
       "Logo": "logos/Logo_BizConsult.webp",
-      "Description": "Soluciones de consultoría para el crecimiento empresarial."
+      "Description": "Soluciones de consultoría para el crecimiento empresarial.",
+      "behavior": "agressiu"
     },
     {
       "Provider": "FurniturePlus",
       "Category": "Mobiliari",
       "Logo": "logos/Logo_FurniturePlus.png",
-      "Description": "Alquiler de mobiliario para eventos."
+      "Description": "Alquiler de mobiliario para eventos.",
+      "behavior": "rígid"
     },
     {
       "Provider": "DecoRent",
       "Category": "Mobiliari",
       "Logo": "logos/Logo_DecoRent.png",
-      "Description": "Servicios de alquiler de mobiliario y decoración."
+      "Description": "Servicios de alquiler de mobiliario y decoración.",
+      "behavior": "agressiu"
     },
     {
       "Provider": "EventFurniture",
       "Category": "Mobiliari",
       "Logo": "logos/Logo_EventFurniture.png",
-      "Description": "Alquiler de mobiliario de alta gama para eventos."
+      "Description": "Alquiler de mobiliario de alta gama para eventos.",
+      "behavior": "flexible"
     }
   ],
   "products": [

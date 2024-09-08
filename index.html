@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <div id="app" class="container">
@@ -82,7 +83,9 @@
                     <input type="text" id="deliveryDate" name="deliveryDate" class="datepicker" required>
                     <label for="deliveryDate">Data d'entrega desitjada</label>
                 </div>
-                
+                 
+
+
                 <div class="row center-align">
                     <div class="col s12 m6">
                         <button class="btn waves-effect waves-light" type="button" onclick="submitQuotation()">Demanar Pressupost</button>
@@ -120,7 +123,7 @@
             <div id="negotiationDetails" class="section"></div>
             <div class="input-field">
                 <input type="number" id="counterOffer" name="counterOffer" min="0" required>
-                <label for="counterOffer">Oferta de l'Alumne (€)</label>
+                <label for="counterOffer">Oferta del Client (€)</label>
             </div>
             <div class="row center-align">
                 <div class="col s12 m4">
@@ -173,6 +176,9 @@
                 </div>
             </div>
         </div>
+
+       
+
     </div>
     <script src="script.js"></script>
 </body>
