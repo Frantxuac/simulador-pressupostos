@@ -3,63 +3,63 @@
     {
       "Provider": "CleanMaster",
       "Category": "Neteja",
-      "Logo": "logos/Logo_CleanMaster.jpg",
+      "Logo": "logos/logo_CleanMaster.jpg",
       "Description": "CleanMaster és una empresa líder en el sector de serveis de neteja per a esdeveniments, coneguda per la seva eficiència i atenció al detall. Amb anys d'experiència, ofereixen solucions de neteja adaptades a les necessitats específiques de qualsevol tipus d'esdeveniment, assegurant que cada espai quedi impecable en el menor temps possible.",
       "behavior": "flexible"
     },
     {
       "Provider": "SparkleClean",
       "Category": "Neteja",
-      "Logo": "logos/Logo_SparkleClean.jpg",
+      "Logo": "logos/logo_SparkleClean.jpg",
       "Description": "SparkleClean és una empresa especialitzada en serveis de neteja ecològica per a esdeveniments. Compromesos amb la sostenibilitat, utilitzen productes biodegradables i tècniques de neteja que redueixen l'impacte ambiental. SparkleClean és la millor opció per aquells esdeveniments que busquen un servei de neteja professional amb consciència ecològica.",
       "behavior": "agressiu"
     },
     {
       "Provider": "GourmetDelights",
       "Category": "Càtering",
-      "Logo": "logos/Logo_GourmetDelights.jpg",
+      "Logo": "logos/logo_GourmetDelights.jpg",
       "Description": "GourmetDelights és una empresa de càtering de luxe especialitzada en crear experiències gastronòmiques inoblidables. Oferim una cuina refinada amb ingredients de primera qualitat, adaptada a esdeveniments exclusius com casaments, congressos i celebracions d'alt nivell. Cada detall és cuidat amb la màxima exigència per assegurar una experiència culinària única per als nostres clients.",
       "behavior": "rígid"
     },
     {
       "Provider": "FiestaCàtering",
       "Category": "Càtering",
-      "Logo": "logos/Logo_FiestaCàtering.jpg",
+      "Logo": "logos/logo_FiestaCàtering.jpg",
       "Description": "FiestaCatering destaca per la seva flexibilitat i creativitat en l'oferta de càtering per a tot tipus d'esdeveniments. Tant si es tracta d'una festa privada com d'una celebració d'empresa, el nostre equip treballa per oferir menús saborosos i accessibles que s'adapten a les necessitats de qualsevol celebració. La nostra prioritat és garantir que tots els convidats gaudeixin d'una experiència gastronòmica inoblidable.",
       "behavior": "flexible"
     },
     {
       "Provider": "Epicurea",
       "Category": "Càtering",
-      "Logo": "logos/Logo_epicurea.jpg",
+      "Logo": "logos/logo_epicurea.jpg",
       "Description": "Epicurea és una empresa de càtering compromesa amb la sostenibilitat i la responsabilitat social. Tots els nostres plats es preparen amb ingredients orgànics i locals, garantint un impacte mínim en el medi ambient. El nostre servei inclou opcions vegetals i sostenibles, oferint solucions gastronòmiques per a esdeveniments amb consciència ambiental. Creiem que menjar bé i respectar el planeta han d'anar de la mà.",
       "behavior": "flexible"
     },
     {
       "Provider": "ExpressTrans",
       "Category": "Transport",
-      "Logo": "logos/Logo_ExpressTrans.jpg",
+      "Logo": "logos/logo_ExpressTrans.jpg",
       "Description": "ExpressTrans ofereix serveis de transport ràpid i fiable, especialitzat en el trasllat d'equipaments per a esdeveniments. Amb una flota moderna i personal altament capacitat, garantim que tot el material arribi puntualment i en perfectes condicions.",
       "behavior": "flexible"
     },
     {
       "Provider": "SafeMove",
       "Category": "Transport",
-      "Logo": "image/Logo_SafeMove.jpg",
+      "Logo": "image/logo_SafeMove.jpg",
       "Description": "SafeMove és sinònim de seguretat i professionalitat. Ofereix serveis de transport amb un enfocament especial en la protecció i cura dels materials sensibles o fràgils. Ideal per a esdeveniments que requereixen trasllats segurs i eficients, amb un equip compromès amb la qualitat.",
       "behavior": "rígid"
     },
     {
       "Provider": "EquipRent",
       "Category": "Lloguer d'equips",
-      "Logo": "logos/Logo_EquipRent.jpg",
+      "Logo": "logos/logo_EquipRent.jpg",
       "Description": "EquipRent és un proveïdor amb un ferm compromís amb la Responsabilitat Social Corporativa (RSC). Ofereix serveis de lloguer d'equips tecnològics de qualitat per a esdeveniments, i una part important de la seva plantilla està formada per persones amb discapacitats. EquipRent destaca per la seva excel·lència en el servei, oferint una experiència completa i adaptada a les necessitats dels seus clients, amb preus lleugerament més alts que reflecteixen el seu compromís social.",
       "behavior": "flexible"
     },
     {
       "Provider": "RentTech",
       "Category": "Lloguer d'equips",
-      "Logo": "logos/Logo_RentTech.jpg",
+      "Logo": "logos/logo_RentTech.jpg",
       "Description": "RentTech és una empresa dedicada al lloguer d'equips tecnològics per a esdeveniments, amb una àmplia gamma de productes que inclouen equips de so, audiovisuals i informàtics. Destaca per la seva eficiència, rapidesa en el servei i preus competitius, amb un equip tècnic especialitzat que garanteix la instal·lació i funcionament òptim dels equips.",
       "behavior": "agressiu"
     },
@@ -80,7 +80,7 @@
     {
       "Provider": "PromoExperts",
       "Category": "Màrqueting i Publicitat",
-      "Logo": "logos/Logo_PromoExperts.jpg",
+      "Logo": "logos/logo_PromoExperts.jpg",
       "Description": "PromoExperts és líder en la creació i distribució de productes de promoció personalitzats. Especialistes en marxandatge per esdeveniments, ofereixen una àmplia gamma d'articles publicitaris per millorar la visibilitat de marques i empreses. Els seus serveis inclouen tant la creació de dissenys com la producció de material promocional de qualitat.",
       "behavior": "flexible"
     },
@@ -94,49 +94,49 @@
     {
       "Provider": "CreativeDesigns",
       "Category": "Disseny Gràfic",
-      "Logo": "logos/Logo_CreativeDesigns.jpg",
+      "Logo": "logos/logo_CreativeDesigns.jpg",
       "Description": "CreativeDesigns és una agència de disseny gràfic amb un equip creatiu especialitzat en la creació de marques, materials publicitaris i dissenys visuals. Amb un enfocament modern i adaptat a les tendències, ofereixen solucions de disseny per a empreses que volen destacar en el mercat i connectar visualment amb el seu públic.",
       "behavior": "rígid"
     },
     {
       "Provider": "GraphixWorld",
       "Category": "Disseny Gràfic",
-      "Logo": "logos/Logo_GraphixWorld.jpg",
+      "Logo": "logos/logo_GraphixWorld.jpg",
       "Description": "GraphixWorld és una agència de disseny gràfic amb un fort compromís amb la responsabilitat social corporativa (RSC). Aposta per l'ús de materials ecològics i sostenibles en la impressió i producció gràfica, així com per donar oportunitats laborals a col·lectius vulnerables. Ofereixen serveis de disseny gràfic d'alta qualitat, sempre amb un enfocament ètic i responsable.",
       "behavior": "flexible"
     },
     {
       "Provider": "ConsultPro",
       "Category": "Consultoria",
-      "Logo": "logos/Logo_ConsultPro.jpg",
+      "Logo": "logos/logo_ConsultPro.jpg",
       "Description": "ConsultPro és una firma de consultoria empresarial amb àmplia experiència en el desenvolupament de plans de negoci, estratègies de creixement i gestió financera. Ofereixen solucions personalitzades per a empreses que busquen millorar el seu rendiment i expandir-se en el mercat.",
       "behavior": "rígid"
     },
     {
       "Provider": "BizConsult",
       "Category": "Consultoria",
-      "Logo": "logos/Logo_BizConsult.jpg",
+      "Logo": "logos/logo_BizConsult.jpg",
       "Description": "BizConsult és una consultoria empresarial amb un enfocament pràctic i orientat a resultats. Ofereixen assessorament en gestió operativa, optimització de processos i planificació estratègica, especialment per a petites i mitjanes empreses que volen millorar la seva eficiència i productivitat.",
       "behavior": "agressiu"
     },
     {
       "Provider": "FurniturePlus",
       "Category": "Mobiliari",
-      "Logo": "logos/Logo_FurniturePlus.jpg",
+      "Logo": "logos/logo_FurniturePlus.jpg",
       "Description": "FurniturePlus és una empresa especialitzada en el lloguer de mobiliari per a esdeveniments, oferint una àmplia gamma de cadires, taules, tarimes i altres accessoris. Els seus productes són reconeguts per la seva qualitat i estètica moderna, ideals per a esdeveniments corporatius, casaments i celebracions.",
       "behavior": "rígid"
     },
     {
       "Provider": "DecoRent",
       "Category": "Mobiliari",
-      "Logo": "logos/Logo_DecoRent.jpg",
+      "Logo": "logos/logo_DecoRent.jpg",
       "Description": "DecoRent combina estil i responsabilitat social. Aquesta empresa de lloguer de mobiliari està compromesa amb el medi ambient i la inclusió social, utilitzant materials reciclats i col·laborant amb entitats locals. La seva oferta inclou dissenys innovadors i sostenibles per a esdeveniments que volen deixar una petjada positiva.",
       "behavior": "agressiu"
     },
     {
       "Provider": "EventFurniture",
       "Category": "Mobiliari",
-      "Logo": "logos/Logo_EventFurniture.jpg",
+      "Logo": "logos/logo_EventFurniture.jpg",
       "Description": "EventFurniture ofereix una solució completa per al lloguer de mobiliari d'esdeveniments, amb una àmplia selecció de mobles pràctics i elegants. Especialitzats en la personalització, poden adaptar les seves peces segons el tema i l'estil de qualsevol esdeveniment.",
       "behavior": "flexible"
     }
