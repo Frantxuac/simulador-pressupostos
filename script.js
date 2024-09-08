@@ -763,9 +763,4 @@ flatpickr("#deliveryDate", {
     loadData();
     showScreen('home');
 
-    // Detectar dispositivos móviles y forzar la recarga
-    if (/Mobi|Android/i.test(navigator.userAgent)) {
-        window.location.reload(true);  // Forzar la recarga completa de la página en móviles
-    }
-
 });
